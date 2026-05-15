@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { Search as SearchIcon } from "lucide-react";
 import MeetingCard from "@/components/MeetingCard";
 import { Input } from "@/components/ui/input";
+import { EmptyState, MeetingGrid, PageHeader, PageShell } from "@/components/layout/PageLayout";
 import { mockMeetings } from "@/lib/mockData";
 
 const Search = () => {
@@ -22,53 +22,40 @@ const Search = () => {
   }, [query]);
 
   return (
-    <div className="min-h-screen relative">
-      <div className="bg-gradient-glow pointer-events-none fixed inset-0 z-0" />
+    <PageShell>
+      <PageHeader title="Search" description="Find meetings, participants, and topics" />
 
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 p-8"
-      >
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground">Search</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Find meetings, participants, and topics
-          </p>
-        </div>
-
-        <div className="relative max-w-xl mb-8">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="sticky top-0 z-20 -mx-4 px-4 py-2 sm:static sm:mx-0 sm:px-0 sm:py-0 mb-4 sm:mb-6 bg-background/80 backdrop-blur-md sm:bg-transparent sm:backdrop-blur-none border-b border-border/30 sm:border-0">
+        <div className="relative max-w-xl">
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           <Input
             type="search"
             placeholder="Search meetings, people, companies..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-10 glass"
+            className="pl-10 glass h-11 text-base sm:text-sm"
           />
         </div>
+      </div>
 
-        <p className="text-sm text-muted-foreground mb-4">
-          {results.length} {results.length === 1 ? "result" : "results"}
-        </p>
+      <p className="text-sm text-muted-foreground mb-3 sm:mb-4">
+        {results.length} {results.length === 1 ? "result" : "results"}
+      </p>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
-        >
+      {results.length === 0 ? (
+        <EmptyState
+          icon={SearchIcon}
+          title="No matches"
+          description="Try a different keyword or check spelling."
+        />
+      ) : (
+        <MeetingGrid>
           {results.map((meeting, i) => (
             <MeetingCard key={meeting.id} meeting={meeting} index={i} />
           ))}
-        </motion.div>
-
-        {results.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-12">
-            No meetings match your search.
-          </p>
-        )}
-      </motion.div>
-    </div>
+        </MeetingGrid>
+      )}
+    </PageShell>
   );
 };
 

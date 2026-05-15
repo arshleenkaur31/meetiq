@@ -16,7 +16,7 @@ const EntityList = ({ entities }: { entities: Entity[] }) => (
       return (
         <div
           key={entity.id}
-          className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-secondary/40 transition-colors group"
+          className="flex items-center gap-3 p-3 sm:p-2.5 rounded-lg hover:bg-secondary/40 active:bg-secondary/50 transition-colors group min-h-[52px] touch-manipulation"
         >
           <div className="w-7 h-7 rounded-md bg-secondary flex items-center justify-center">
             <Icon className="w-3.5 h-3.5 text-muted-foreground" />
@@ -30,7 +30,7 @@ const EntityList = ({ entities }: { entities: Entity[] }) => (
               href={entity.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity"
+              className="text-xs text-primary sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0 py-2"
               onClick={(e) => e.stopPropagation()}
             >
               Open →

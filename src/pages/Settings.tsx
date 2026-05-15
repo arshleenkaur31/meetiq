@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
+import {
+  ListGroup,
+  ListGroupItem,
+  PageCard,
+  PageHeader,
+  PageShell,
+} from "@/components/layout/PageLayout";
 
 const Settings = () => {
   const [autoRecord, setAutoRecord] = useState(true);
@@ -35,55 +41,42 @@ const Settings = () => {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="min-h-screen relative"
-    >
-      <div className="bg-gradient-glow pointer-events-none fixed inset-0 z-0" />
+    <PageShell narrow>
+      <PageHeader title="Settings" description="Manage your MeetIQ preferences" />
 
-      <div className="relative z-10 p-8 max-w-2xl">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground">Settings</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Manage your MeetIQ preferences
-          </p>
+      <PageCard title="Profile" className="mb-4 sm:mb-6">
+        <div className="space-y-2">
+          <Label htmlFor="display-name">Display name</Label>
+          <Input
+            id="display-name"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            className="h-11 sm:h-10"
+          />
         </div>
+      </PageCard>
 
-        <section className="glass rounded-xl p-6 mb-6">
-          <h2 className="text-sm font-semibold text-foreground mb-4">Profile</h2>
-          <div className="space-y-2">
-            <Label htmlFor="display-name">Display name</Label>
-            <Input
-              id="display-name"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
-          </div>
-        </section>
-
-        <section className="glass rounded-xl p-6">
-          <h2 className="text-sm font-semibold text-foreground mb-4">Preferences</h2>
-          <div className="space-y-6">
-            {settingRows.map((row) => (
-              <div key={row.id} className="flex items-center justify-between gap-4">
-                <div>
-                  <Label htmlFor={row.id} className="text-foreground">
-                    {row.label}
-                  </Label>
-                  <p className="text-xs text-muted-foreground mt-0.5">{row.description}</p>
-                </div>
-                <Switch
-                  id={row.id}
-                  checked={row.checked}
-                  onCheckedChange={row.onCheckedChange}
-                />
+      <PageCard title="Preferences">
+        <ListGroup>
+          {settingRows.map((row) => (
+            <ListGroupItem key={row.id}>
+              <div className="min-w-0 flex-1 pr-2">
+                <Label htmlFor={row.id} className="text-foreground text-sm font-medium">
+                  {row.label}
+                </Label>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{row.description}</p>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
-    </motion.div>
+              <Switch
+                id={row.id}
+                checked={row.checked}
+                onCheckedChange={row.onCheckedChange}
+                className="shrink-0 scale-110 sm:scale-100"
+              />
+            </ListGroupItem>
+          ))}
+        </ListGroup>
+      </PageCard>
+    </PageShell>
   );
 };
 

@@ -22,7 +22,7 @@ const MeetingCard = ({ meeting, index }: { meeting: Meeting; index: number }) =>
     >
       <Link
         to={isLive ? "/live" : `/meeting/${meeting.id}`}
-        className="block glass rounded-xl p-5 hover:shadow-glow hover:border-primary/30 transition-all duration-300 group"
+        className="block glass rounded-xl p-4 sm:p-5 hover:shadow-glow hover:border-primary/30 transition-all duration-300 group touch-manipulation active:scale-[0.99]"
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">

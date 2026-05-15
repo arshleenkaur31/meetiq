@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
 import { Mic, Clock, CheckSquare, Sparkles } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import MeetingCard from "@/components/MeetingCard";
+import { PageHeader, PageShell, MeetingGrid, StatGrid } from "@/components/layout/PageLayout";
 import { mockMeetings, stats } from "@/lib/mockData";
 
 const statItems = [
@@ -12,37 +12,27 @@ const statItems = [
 ];
 
 const Dashboard = () => (
-  <div className="min-h-screen">
-    <div className="bg-gradient-glow pointer-events-none fixed inset-0 z-0" />
+  <PageShell>
+    <PageHeader
+      title="Good morning"
+      description={`You have ${mockMeetings.filter((m) => m.status === "live").length} live meeting right now`}
+    />
 
-    <div className="relative z-10 p-8">
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <h1 className="text-2xl font-bold text-foreground">Good morning</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          You have {mockMeetings.filter((m) => m.status === "live").length} live meeting right now
-        </p>
-      </motion.div>
+    <StatGrid>
+      {statItems.map((stat, i) => (
+        <StatCard key={stat.label} {...stat} index={i} />
+      ))}
+    </StatGrid>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statItems.map((stat, i) => (
-          <StatCard key={stat.label} {...stat} index={i} />
+    <section>
+      <h2 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-4">Recent Meetings</h2>
+      <MeetingGrid>
+        {mockMeetings.map((meeting, i) => (
+          <MeetingCard key={meeting.id} meeting={meeting} index={i} />
         ))}
-      </div>
-
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-foreground mb-4">Recent Meetings</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {mockMeetings.map((meeting, i) => (
-            <MeetingCard key={meeting.id} meeting={meeting} index={i} />
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
+      </MeetingGrid>
+    </section>
+  </PageShell>
 );
 
 export default Dashboard;

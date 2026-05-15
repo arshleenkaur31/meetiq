@@ -64,8 +64,11 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -97,5 +100,21 @@
   }
   .glass-strong {
     @apply bg-card/90 backdrop-blur-2xl border border-border/60;
+  }
+  .page-content {
+    @apply relative z-10 px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }

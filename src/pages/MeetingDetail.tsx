@@ -1,11 +1,16 @@
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { ArrowLeft, Download, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import InsightBadge from "@/components/InsightBadge";
 import EntityList from "@/components/EntityList";
 import LiveTranscript from "@/components/LiveTranscript";
 import { mockMeetings } from "@/lib/mockData";
+import {
+  ActionBar,
+  PageCard,
+  PageShell,
+  ResponsiveTabs,
+} from "@/components/layout/PageLayout";
 
 const MeetingDetail = () => {
   const { id } = useParams();
@@ -13,147 +18,131 @@ const MeetingDetail = () => {
 
   if (!meeting) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Meeting not found</p>
-      </div>
+      <PageShell>
+        <p className="text-center text-muted-foreground py-16">Meeting not found</p>
+      </PageShell>
     );
   }
 
-  return (
-    <div className="min-h-screen relative">
-      <div className="bg-gradient-glow pointer-events-none fixed inset-0 z-0" />
+  const dateLabel = new Date(meeting.date).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
-      <div className="relative z-10 p-8">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
-            <ArrowLeft className="w-4 h-4" /> Back
-          </Link>
-
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <h1 className="text-xl font-bold text-foreground">{meeting.title}</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {new Date(meeting.date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}{" "}
-                · {meeting.duration} · {meeting.participants.join(", ")}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
-                <Share2 className="w-4 h-4" /> Share
-              </Button>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Download className="w-4 h-4" /> Export
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Summary */}
-        {meeting.summary && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="glass rounded-xl p-6 mb-6"
-          >
-            <h2 className="text-sm font-semibold text-foreground mb-2">Executive Summary</h2>
-            <p className="text-sm text-foreground/80 leading-relaxed">{meeting.summary}</p>
-          </motion.div>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Insights + Actions */}
-          <div className="lg:col-span-2 space-y-6">
-            {(meeting.insights?.length ?? 0) > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="glass rounded-xl p-6"
-              >
-                <h2 className="text-sm font-semibold text-foreground mb-3">Key Insights</h2>
-                <div className="space-y-2">
-                  {meeting.insights?.map((insight) => (
-                    <InsightBadge key={insight.id} insight={insight} />
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {(meeting.actionItems?.length ?? 0) > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="glass rounded-xl p-6"
-              >
-                <h2 className="text-sm font-semibold text-foreground mb-3">Action Items</h2>
-                <div className="space-y-2">
-                  {meeting.actionItems?.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30">
-                      <input
-                        type="checkbox"
-                        defaultChecked={item.done}
-                        className="w-4 h-4 rounded accent-primary"
-                      />
-                      <div className="flex-1">
-                        <p className={`text-sm ${item.done ? "line-through text-muted-foreground" : "text-foreground"}`}>
-                          {item.text}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground">→ {item.assignee}</p>
-                      </div>
-                      <span
-                        className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                          item.priority === "high"
-                            ? "bg-destructive/15 text-destructive"
-                            : item.priority === "medium"
-                            ? "bg-warning/15 text-warning"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {item.priority}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {(meeting.transcript?.length ?? 0) > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
-                className="glass rounded-xl p-6"
-              >
-                <h2 className="text-sm font-semibold text-foreground mb-4">Full Transcript</h2>
-                <LiveTranscript chunks={meeting.transcript!} />
-              </motion.div>
-            )}
-          </div>
-
-          {/* Right sidebar */}
-          <div className="space-y-6">
-            {(meeting.entities?.length ?? 0) > 0 && (
-              <motion.div
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="glass rounded-xl p-5"
-              >
-                <h3 className="text-sm font-semibold text-foreground mb-3">Mentioned Entities</h3>
-                <EntityList entities={meeting.entities!} />
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </div>
+  const insightsPanel = (
+    <div className="space-y-2">
+      {meeting.insights?.map((insight) => (
+        <InsightBadge key={insight.id} insight={insight} />
+      ))}
     </div>
+  );
+
+  const actionsPanel = (
+    <div className="space-y-2">
+      {meeting.actionItems?.map((item) => (
+        <div
+          key={item.id}
+          className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg bg-secondary/30 min-h-[52px]"
+        >
+          <div className="flex items-start gap-3 flex-1 min-w-0">
+            <input
+              type="checkbox"
+              defaultChecked={item.done}
+              className="w-5 h-5 rounded accent-primary shrink-0 mt-0.5"
+            />
+            <div className="min-w-0 flex-1">
+              <p
+                className={`text-sm leading-snug ${item.done ? "line-through text-muted-foreground" : "text-foreground"}`}
+              >
+                {item.text}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">→ {item.assignee}</p>
+            </div>
+          </div>
+          <span
+            className={`self-start sm:self-center text-xs font-medium px-2.5 py-1 rounded-full shrink-0 ${
+              item.priority === "high"
+                ? "bg-destructive/15 text-destructive"
+                : item.priority === "medium"
+                  ? "bg-warning/15 text-warning"
+                  : "bg-muted text-muted-foreground"
+            }`}
+          >
+            {item.priority}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+
+  const transcriptPanel = <LiveTranscript chunks={meeting.transcript!} />;
+  const entitiesPanel = <EntityList entities={meeting.entities!} />;
+
+  const mobileTabs = [
+    ...(meeting.insights?.length ? [{ value: "insights", label: "Insights", content: insightsPanel }] : []),
+    ...(meeting.actionItems?.length ? [{ value: "actions", label: "Actions", content: actionsPanel }] : []),
+    ...(meeting.transcript?.length ? [{ value: "transcript", label: "Transcript", content: transcriptPanel }] : []),
+    ...(meeting.entities?.length ? [{ value: "entities", label: "Entities", content: entitiesPanel }] : []),
+  ];
+
+  return (
+    <PageShell>
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 min-h-11 touch-manipulation -ml-1 px-1"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back
+      </Link>
+
+      <header className="mb-5 sm:mb-6">
+        <h1 className="text-lg sm:text-xl font-bold text-foreground leading-tight">{meeting.title}</h1>
+        <p className="text-sm text-muted-foreground mt-2 space-y-1">
+          <span className="block">{dateLabel}</span>
+          <span className="block">
+            {meeting.duration} · {meeting.participants.join(", ")}
+          </span>
+        </p>
+        <div className="mt-4">
+          <ActionBar>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Share2 className="w-4 h-4" /> Share
+            </Button>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Download className="w-4 h-4" /> Export
+            </Button>
+          </ActionBar>
+        </div>
+      </header>
+
+      {meeting.summary && (
+        <PageCard title="Executive Summary" className="mb-4 sm:mb-6">
+          <p className="text-sm text-foreground/80 leading-relaxed">{meeting.summary}</p>
+        </PageCard>
+      )}
+
+      {mobileTabs.length > 0 && (
+        <ResponsiveTabs defaultValue={mobileTabs[0].value} tabs={mobileTabs} />
+      )}
+
+      <div className="hidden lg:grid grid-cols-3 gap-6">
+        <div className="col-span-2 space-y-6">
+          {(meeting.insights?.length ?? 0) > 0 && (
+            <PageCard title="Key Insights">{insightsPanel}</PageCard>
+          )}
+          {(meeting.actionItems?.length ?? 0) > 0 && (
+            <PageCard title="Action Items">{actionsPanel}</PageCard>
+          )}
+          {(meeting.transcript?.length ?? 0) > 0 && (
+            <PageCard title="Full Transcript">{transcriptPanel}</PageCard>
+          )}
+        </div>
+        {(meeting.entities?.length ?? 0) > 0 && (
+          <PageCard title="Mentioned Entities">{entitiesPanel}</PageCard>
+        )}
+      </div>
+    </PageShell>
   );
 };
 
