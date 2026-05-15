@@ -1,6 +1,7 @@
 # MeetIQ
 
 MeetIQ is a React + TypeScript web app for meeting intelligence, including live meeting view, history, searchable transcripts, and AI-generated insights.
+https://meetiq-nrm8q5keg-arshleenkaur31s-projects.vercel.app/
 
 ## Run locally
 
