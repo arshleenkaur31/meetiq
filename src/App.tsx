@@ -7,6 +7,9 @@ import Sidebar from "@/components/Sidebar";
 import Index from "./pages/Index";
 import LiveMeeting from "./pages/LiveMeeting";
 import MeetingDetail from "./pages/MeetingDetail";
+import History from "./pages/History";
+import Search from "./pages/Search";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +26,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/live" element={<LiveMeeting />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/meeting/:id" element={<MeetingDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
